@@ -3,6 +3,9 @@
 #include <stdio.h>
 
 /* TODO: add the needed states */
+float k0;
+int count_silence;
+int count_voice;
 typedef enum {ST_UNDEF=0, ST_SILENCE, ST_VOICE, ST_INIT, ST_MAYBE_SILENCE, ST_MAYBE_VOICE} VAD_STATE;
 
 /* Return a string label associated to each state */
@@ -16,16 +19,19 @@ typedef struct {
   float sampling_rate;
   unsigned int frame_length;
   float last_feature; /* for debuggin purposes */
-  float k0; /*Nivel estimado de silencio */
   float k1; /*Umbral de decision voz-silencio */
-  float alfa1; /*Margen voz-silencio-umbral */
+  float count_silence;
+  float count_voice;
+  float alfa1;
+  int frame_silence;
+  int frame_voice;
 } VAD_DATA;
 
 /* Call this function before using VAD: 
    It should return allocated and initialized values of vad_data
 
    sampling_rate: ... the sampling rate */
-VAD_DATA *vad_open(float sampling_rate, float alfa1);
+VAD_DATA *vad_open(float sampling_rate, float alfa1, int frame_silence, int frame_voice);
 
 /* vad works frame by frame.
    This function returns the frame size so that the program knows how
