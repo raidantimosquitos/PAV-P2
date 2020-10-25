@@ -161,12 +161,14 @@ Ejercicios
   `frame_voice = 8`
   `alfa1 = 3`
 
-| Summary     | V      | S     |
-|-------------|--------|-------|
-| Recall %    | 95,75  | 83,02 |
-| Precision % | 88,82  | 93,27 |
-| F-Score %   | 94,28  | 91,02 |
-| TOTAL %     | **92,634**     | 
+	| Summary     | V      | S     |
+	|-------------|--------|-------|
+	| Recall %    | 95,75  | 83,02 |
+	| Precision % | 88,82  | 93,27 |
+	| F-Score %   | 94,28  | 91,02 |
+	| TOTAL %     | **92,634**     |
+
+ Estamos satisfechos con estos resultados. Nuestro sistema es capaz de diferenciar entre voz y silencio de manera muy efectiva.
 
 ### Trabajos de ampliación
 
