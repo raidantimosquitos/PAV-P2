@@ -121,6 +121,29 @@ Ejercicios
 - Complete el código de los ficheros de la práctica para implementar un detector de actividad vocal tan
   exacto como sea posible. Tome como objetivo la maximización de la puntuación-F `TOTAL`.
 
+  Hemos modificado el fichero `vad.c` de manera que se adapte al FSA presentado en la práctica. Hemos añadido 
+  3 estados nuevos: `INIT`, `MAYBE_SILENCE` y `MAYBE_VOICE`. El estado `INIT` es el estado inicial de la máquina.
+  En este estado calculamos el umbral de silencio, `k0`, a partir de los primeros 10 frames de la señal. Además, 
+  calculamos un segundo umbral `k1`, definido como `k1 = k0 + alfa1` donde `alfa1` es el valor de margen pasado 
+  como argumento al llamar al programa. Nos sirve para no tener tantos saltos entre estados.
+
+  Los otros dos estados mencionados són también para tener menos saltos entre voz y silencio, ya que muchas veces 
+  se puede bajar del umbral que definimos, pero no significa que haya de cambiar de estado. Un ejemplo son las micropausas 
+  que hacemos al hablar, no significa que dejemos de hablar, sino que forma parte del habla natural. El autómata entrará en el estado 
+  `MAYBE_VOICE` si se encuentra en el estado `SILENCE` y la potencia media del frame es superior al umbral `k1`. Si la potencia media 
+  sigue siendo superior durante un número determinado de frames (definido por la variable `frame_voice`) entonces cambiará al estado 
+  `VOICE`. Para el caso `MAYBE_SILENCE` procedemos de manera análoga, pero en este caso la potencia media inferior a `k1` durante 
+  el número de frames definido por `frame_silence`.
+
+  Una vez diseñado nuestro autómata y sus estados, procedimos a modificar el archivo `main_vad.c` de manera que sólo 
+  imprima los estados *VOZ* y *SILENCIO*. Para hacer esto, se tiene que decidir que hacer con los frames de estados
+  intermedios. Si tenemos un número de frames que son `MAYBE_VOICE`, si y sólo si el siguiente estado es `VOICE`, 
+  los etiquetamos como `VOICE`. Procedemos de la misma manera con los frames `MAYBE_SILENCE`. De esta manera todos los frames 
+  de la señal quedan etiquetados con una de las dos etiquetas.
+
+  Modificamos también el ficheros cabecera `vad.h` para que incluya todas las nuevas variables y estados definidos.
+
+
 - Inserte una gráfica en la que se vea con claridad la señal temporal, el etiquetado manual y la detección
   automática conseguida para el fichero grabado al efecto. 
 
@@ -131,6 +154,19 @@ Ejercicios
   continuación las tasas de sensibilidad (*recall*) y precisión para el conjunto de la base de datos (sólo
   el resumen).
 
+  El script `run_vad.sh` nos imprime las tasas de sensibilidad de nuestro sistema. Podemos obtener distintos resultados modificando 
+  de manera manual los valores de `frame_silence`, `frame_voice` y `alfa1`. Estos resultados son los obtenidos con estos valores:
+
+  `frame_silence = 4`
+  `frame_voice = 8`
+  `alfa1 = 3`
+
+| Summary     | V      | S     |
+|-------------|--------|-------|
+| Recall %    | 95,75  | 83,02 |
+| Precision % | 88,82  | 93,27 |
+| F-Score %   | 94,28  | 91,02 |
+| TOTAL %     | **92,634**     | 
 
 ### Trabajos de ampliación
 
